@@ -1,3 +1,4 @@
+//Components/SearchPanel.tsx
 import { Button } from '@/Components/ui/button';
 import { Input } from '@/Components/ui/input';
 
