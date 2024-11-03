@@ -22,3 +22,20 @@ export const useSearchMovies = (query: string) => {
     retry: 1, // Повторить один раз, если запрос не удался
   });
 };
+
+// Хук для получения популярных фильмов
+const fetchPopularMovies = async () => {
+  const response = await fetch(`${API_URL}/movie/popular?api_key=${API_KEY}`);
+  if (!response.ok) {
+    throw new Error('Failed to fetch popular movies');
+  }
+  return response.json();
+};
+
+export const usePopularMovies = () => {
+  return useQuery({
+    queryKey: ['popularMovies'],
+    queryFn: () => fetchPopularMovies(),
+    staleTime: 1000 * 60 * 10,
+  });
+};
