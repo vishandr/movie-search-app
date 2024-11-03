@@ -45,7 +45,10 @@ const MovieDetails = () => {
 
         {/* Movie Details */}
         <div className='md:w-1/2 p-6'>
-          <h2 className='text-3xl font-bold mb-4'>{movie?.title}</h2>
+          <h2 className='text-3xl font-bold mb-4'>{movie?.original_title}</h2>
+          {movie?.original_title !== movie?.title && (
+            <h3 className='text-2xl font-bold mb-4'>{movie?.title}</h3>
+          )}
           <p className='mb-4'>{movie?.overview}</p>
           <div className='text-gray-700 mb-2'>
             <strong>Release Date:</strong> {movie?.release_date}
@@ -60,7 +63,7 @@ const MovieDetails = () => {
           </div>
           <div className='flex flex-wrap gap-4 mt-6'>
             <span className='bg-green-100 text-green-800 px-3 py-1 rounded-full'>
-              Language: {movie.original_language}
+              Language: {movie?.original_language}
             </span>
           </div>
         </div>
