@@ -6,19 +6,14 @@ import SearchPanel from '../Components/SearchPanel';
 
 const SearchPage = () => {
   const [query, setQuery] = useState('');
-  const {
-    data: moviesData,
-    isLoading,
-    error,
-    refetch,
-  } = useSearchMovies(query);
+  const { data: moviesData, isLoading, error } = useSearchMovies(query);
 
   const { data: popularMoviesData, isLoading: isPopularLoading } =
     usePopularMovies();
 
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
-    refetch();
+    // refetch();
   };
 
   // if (isLoading) return <div>Loading...</div>;

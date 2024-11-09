@@ -1,14 +1,16 @@
 // pages/MovieDetails.tsx
-import React from 'react';
+// import React from 'react';
+import { useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
 import { Movie } from '../Components/MovieCard';
+import { Switch } from '@/Components/ui/switch';
 
-const fetchMovieDetails = async (id: string) => {
+const fetchMovieDetails = async (id: string, language: string) => {
   const response = await fetch(
     `https://api.themoviedb.org/3/movie/${id}?api_key=${
       import.meta.env.VITE_TMDB_API_KEY
-    }`
+    }&language=${language}`
   );
   if (!response.ok) {
     throw new Error('Failed to fetch movie details');
@@ -18,13 +20,18 @@ const fetchMovieDetails = async (id: string) => {
 
 const MovieDetails = () => {
   const { id } = useParams<{ id: string }>();
+  const [language, setLanguage] = useState('en');
+  const handleLanguageChange = () => {
+    setLanguage((prevLanguage) => (prevLanguage === 'en' ? 'ru' : 'en'));
+  };
+
   const {
     data: movie,
     isLoading,
     error,
   } = useQuery<Movie>({
-    queryKey: ['movie', id],
-    queryFn: () => fetchMovieDetails(id!),
+    queryKey: ['movie', id, language],
+    queryFn: () => fetchMovieDetails(id!, language),
     enabled: !!id, // Запрос выполняется только при наличии id
   });
 
@@ -45,11 +52,30 @@ const MovieDetails = () => {
 
         {/* Movie Details */}
         <div className='md:w-1/2 p-6'>
+          <div className='flex justify-end gap-x-2'>
+            <span>EN </span>
+            <Switch
+              checked={language === 'ru'}
+              onCheckedChange={handleLanguageChange}
+            />
+            <span> RU</span>
+          </div>
           <h2 className='text-3xl font-bold mb-4'>{movie?.original_title}</h2>
           {movie?.original_title !== movie?.title && (
             <h3 className='text-2xl font-bold mb-4'>{movie?.title}</h3>
           )}
-          <p className='mb-4'>{movie?.overview}</p>
+          {language === 'ru' ? (
+            movie?.overview ? (
+              <p className='mb-4'>{movie.overview}</p>
+            ) : (
+              <p className='mb-4'>К сожалению, нет описания на русском языке</p>
+            )
+          ) : movie?.overview ? (
+            <p className='mb-4'>{movie.overview}</p>
+          ) : (
+            <p className='mb-4'>Sorry, no description available in English</p>
+          )}
+
           <div className='text-gray-700 mb-2'>
             <strong>Release Date:</strong> {movie?.release_date}
           </div>

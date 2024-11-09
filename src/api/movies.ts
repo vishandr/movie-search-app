@@ -15,9 +15,9 @@ const fetchMovies = async (query: string) => {
 
 export const useSearchMovies = (query: string) => {
   return useQuery({
-    queryKey: ['movies'],
+    queryKey: ['movies', query],
     queryFn: () => fetchMovies(query),
-    enabled: false, // Запрос выполняется только вручную
+    enabled: query.length > 3, // Запрос выполняется только вручную
     staleTime: 1000 * 60 * 5, // Кеширование данных на 5 минут
     retry: 1, // Повторить один раз, если запрос не удался
   });
